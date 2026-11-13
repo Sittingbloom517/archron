@@ -1,0 +1,2210 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ARCHON // Linux Knowledge Base & Social Local Wiki v4.0</title>
+  <style>
+    /* ===================================================================== */
+    /* AIR-GAPPED EMBEDDED DESIGN SYSTEM (ZERO EXTERNAL CDNS OR FONTS)       */
+    /* ===================================================================== */
+    :root {
+      --bg: #070a0f;
+      --panel: #0d1219;
+      --card: #131a24;
+      --card-hover: #18212e;
+      --border: #222c3c;
+      --border-strong: #2f3d52;
+      --text: #e2e8f0;
+      --text-muted: #94a3b8;
+      --text-dim: #64748b;
+      --emerald: #10b981;
+      --emerald-hover: #059669;
+      --emerald-dim: rgba(16, 185, 129, 0.14);
+      --cyan: #06b6d4;
+      --cyan-dim: rgba(6, 182, 212, 0.14);
+      --amber: #f59e0b;
+      --amber-dim: rgba(245, 158, 11, 0.15);
+      --rose: #f43f5e;
+      --rose-dim: rgba(244, 63, 94, 0.15);
+      --purple: #a855f7;
+      --purple-dim: rgba(168, 85, 247, 0.15);
+      --font-sans: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Ubuntu, Cantarell, sans-serif;
+      --font-mono: "JetBrains Mono", "Fira Code", "DejaVu Sans Mono", "Liberation Mono", Menlo, Monaco, Consolas, monospace;
+      --radius-sm: 6px;
+      --radius-md: 10px;
+      --radius-lg: 14px;
+      --radius-xl: 18px;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      background-color: var(--bg);
+      color: var(--text);
+      font-family: var(--font-sans);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      background-image: radial-gradient(rgba(16, 185, 129, 0.06) 1px, transparent 0);
+      background-size: 24px 24px;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    ::-webkit-scrollbar { width: 6px; height: 6px; }
+    ::-webkit-scrollbar-track { background: var(--bg); }
+    ::-webkit-scrollbar-thumb { background: var(--border-strong); border-radius: 99px; }
+    ::-webkit-scrollbar-thumb:hover { background: var(--emerald); }
+
+    /* Typography & Utilities */
+    .mono { font-family: var(--font-mono); }
+    .hidden { display: none !important; }
+    .flex { display: flex; }
+    .items-center { align-items: center; }
+    .justify-between { justify-content: space-between; }
+    .gap-1 { gap: 4px; }
+    .gap-2 { gap: 8px; }
+    .gap-3 { gap: 12px; }
+    .w-full { width: 100%; }
+
+    /* Buttons */
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      padding: 7px 12px;
+      border-radius: var(--radius-md);
+      font-family: var(--font-mono);
+      font-size: 12px;
+      font-weight: 500;
+      cursor: pointer;
+      border: 1px solid var(--border);
+      background: var(--card);
+      color: var(--text);
+      transition: all 0.15s ease;
+      white-space: nowrap;
+    }
+    .btn:hover { background: var(--card-hover); border-color: var(--border-strong); }
+    .btn-primary {
+      background: var(--emerald);
+      color: #03150e;
+      border-color: var(--emerald);
+      font-weight: 700;
+      box-shadow: 0 0 16px rgba(16, 185, 129, 0.25);
+    }
+    .btn-primary:hover { background: #34d399; border-color: #34d399; }
+    .btn-emerald-ghost { background: var(--emerald-dim); border-color: rgba(16, 185, 129, 0.4); color: #34d399; }
+    .btn-emerald-ghost:hover { background: rgba(16, 185, 129, 0.22); }
+    .btn-cyan-ghost { background: var(--cyan-dim); border-color: rgba(6, 182, 212, 0.4); color: #22d3ee; }
+    .btn-cyan-ghost:hover { background: rgba(6, 182, 212, 0.22); }
+    .btn-amber-ghost { background: var(--amber-dim); border-color: rgba(245, 158, 11, 0.45); color: #fbbf24; }
+    .btn-rose-ghost { background: var(--rose-dim); border-color: rgba(244, 63, 94, 0.45); color: #fb7185; }
+    .btn-rose-ghost:hover { background: rgba(244, 63, 94, 0.24); }
+    .btn-sm { padding: 5px 9px; font-size: 11px; border-radius: var(--radius-sm); }
+
+    /* Form Controls */
+    .input, .select, .textarea {
+      width: 100%;
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      padding: 9px 12px;
+      color: var(--text);
+      font-family: var(--font-mono);
+      font-size: 13px;
+      outline: none;
+      transition: border-color 0.15s ease, box-shadow 0.15s ease;
+    }
+    .input:focus, .select:focus, .textarea:focus {
+      border-color: var(--emerald);
+      box-shadow: 0 0 0 2px rgba(16, 185, 129, 0.18);
+    }
+    .textarea { font-family: var(--font-mono); line-height: 1.55; resize: vertical; }
+
+    /* Top Header */
+    .topbar {
+      position: sticky;
+      top: 0;
+      z-index: 30;
+      background: rgba(13, 18, 25, 0.92);
+      backdrop-filter: blur(10px);
+      border-bottom: 1px solid var(--border);
+      padding: 10px 18px;
+    }
+    .topbar-inner {
+      max-width: 1400px;
+      margin: 0 auto;
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+    }
+    .brand { display: flex; align-items: center; gap: 10px; cursor: pointer; }
+    .brand-icon {
+      width: 36px; height: 36px;
+      border-radius: var(--radius-md);
+      background: var(--emerald-dim);
+      border: 1px solid rgba(16, 185, 129, 0.45);
+      display: flex; align-items: center; justify-content: center;
+      color: var(--emerald);
+      font-family: var(--font-mono);
+      font-weight: 800;
+      font-size: 16px;
+      box-shadow: 0 0 15px rgba(16, 185, 129, 0.2);
+    }
+    .brand-title { font-family: var(--font-mono); font-weight: 800; font-size: 16px; letter-spacing: -0.02em; color: #fff; }
+    .brand-title span { color: var(--emerald); }
+    .badge {
+      font-family: var(--font-mono);
+      font-size: 10px;
+      padding: 2px 6px;
+      border-radius: 5px;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+    }
+    .badge-emerald { background: var(--emerald-dim); color: #34d399; border: 1px solid rgba(16, 185, 129, 0.35); }
+    .badge-cyan { background: var(--cyan-dim); color: #22d3ee; border: 1px solid rgba(6, 182, 212, 0.35); }
+    .badge-amber { background: var(--amber-dim); color: #fbbf24; border: 1px solid rgba(245, 158, 11, 0.35); }
+    .badge-purple { background: var(--purple-dim); color: #c084fc; border: 1px solid rgba(168, 85, 247, 0.35); }
+    .badge-rose { background: var(--rose-dim); color: #fb7185; border: 1px solid rgba(244, 63, 94, 0.35); }
+
+    .search-box { position: relative; flex: 1; min-width: 220px; max-width: 380px; }
+    .search-box input { padding-left: 32px; padding-right: 42px; font-size: 12px; }
+    .search-icon { position: absolute; left: 10px; top: 50%; transform: translateY(-50%); color: var(--text-dim); pointer-events: none; }
+    .search-clear { position: absolute; right: 8px; top: 50%; transform: translateY(-50%); background: none; border: none; color: var(--text-muted); font-family: var(--font-mono); font-size: 10px; cursor: pointer; }
+
+    /* Workspace Grid */
+    .workspace {
+      flex: 1;
+      max-width: 1400px;
+      width: 100%;
+      margin: 0 auto;
+      display: flex;
+      position: relative;
+    }
+    .sidebar {
+      width: 300px;
+      flex-shrink: 0;
+      border-right: 1px solid var(--border);
+      background: rgba(13, 18, 25, 0.65);
+      display: flex;
+      flex-direction: column;
+      height: calc(100vh - 59px);
+      position: sticky;
+      top: 59px;
+    }
+    .sidebar-section { padding: 14px; border-bottom: 1px solid var(--border); }
+    .section-label { font-family: var(--font-mono); font-size: 10px; text-transform: uppercase; letter-spacing: 0.08em; color: var(--text-muted); }
+    .cat-pills { display: flex; flex-wrap: wrap; gap: 5px; margin-top: 8px; }
+    .cat-pill {
+      padding: 4px 8px;
+      border-radius: 6px;
+      font-family: var(--font-mono);
+      font-size: 11px;
+      background: var(--card);
+      border: 1px solid var(--border);
+      color: var(--text-muted);
+      cursor: pointer;
+    }
+    .cat-pill.active { background: var(--emerald-dim); border-color: rgba(16, 185, 129, 0.5); color: #34d399; font-weight: 600; }
+
+    .sidebar-tabs { display: flex; border-bottom: 1px solid var(--border); padding: 0 10px; }
+    .sidebar-tab {
+      flex: 1;
+      padding: 9px 4px;
+      background: none;
+      border: none;
+      border-bottom: 2px solid transparent;
+      color: var(--text-muted);
+      font-family: var(--font-mono);
+      font-size: 11px;
+      cursor: pointer;
+      display: flex; align-items: center; justify-content: center; gap: 4px;
+    }
+    .sidebar-tab.active { border-bottom-color: var(--emerald); color: var(--emerald); font-weight: 700; }
+
+    .article-list { flex: 1; overflow-y: auto; padding: 10px; display: flex; flex-direction: column; gap: 7px; }
+    .article-card {
+      padding: 10px 12px;
+      border-radius: var(--radius-md);
+      background: rgba(19, 26, 36, 0.7);
+      border: 1px solid var(--border);
+      cursor: pointer;
+      transition: all 0.14s ease;
+    }
+    .article-card:hover { background: var(--card); border-color: var(--border-strong); }
+    .article-card.active { background: var(--emerald-dim); border-color: rgba(16, 185, 129, 0.55); }
+    .article-card-title { font-size: 13px; font-weight: 600; line-height: 1.35; margin: 5px 0; color: #f1f5f9; }
+    .article-card.active .article-card-title { color: #6ee7b7; }
+    .article-card-meta { font-family: var(--font-mono); font-size: 10px; color: var(--text-dim); display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }
+
+    .sidebar-footer {
+      padding: 10px 14px;
+      border-top: 1px solid var(--border);
+      background: var(--panel);
+      font-family: var(--font-mono);
+      font-size: 11px;
+      color: var(--text-muted);
+    }
+    .pulse-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--emerald); display: inline-block; box-shadow: 0 0 8px var(--emerald); }
+
+    /* Main Content Area */
+    .main-pane { flex: 1; min-width: 0; padding: 24px 28px; }
+    .reader-card {
+      max-width: 920px;
+      margin: 0 auto;
+      background: var(--panel);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-xl);
+      overflow: hidden;
+      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.45);
+    }
+    .reader-header { padding: 20px 26px; background: var(--card); border-bottom: 1px solid var(--border); }
+    .reader-body { padding: 26px; }
+    .reader-notes { padding: 20px 26px; background: rgba(7, 10, 15, 0.7); border-top: 1px solid var(--border); }
+
+    /* Wiki Prose Typography */
+    .wiki-prose h1 { font-size: 1.65rem; font-weight: 700; color: #fff; margin-bottom: 14px; padding-bottom: 10px; border-bottom: 1px solid var(--border); }
+    .wiki-prose h2 { font-size: 1.22rem; font-weight: 700; color: var(--emerald); font-family: var(--font-mono); margin: 24px 0 10px; }
+    .wiki-prose h3 { font-size: 1.05rem; font-weight: 600; color: #38bdf8; margin: 18px 0 8px; }
+    .wiki-prose p { color: #cbd5e1; line-height: 1.72; margin-bottom: 14px; font-size: 0.95rem; }
+    .wiki-prose ul { padding-left: 22px; margin-bottom: 14px; color: #cbd5e1; }
+    .wiki-prose li { margin-bottom: 6px; line-height: 1.6; }
+    .wiki-prose code:not(pre code) {
+      background: #172130;
+      color: #34d399;
+      padding: 2px 6px;
+      border-radius: 5px;
+      font-family: var(--font-mono);
+      font-size: 0.85em;
+      border: 1px solid #263449;
+    }
+    .code-wrap { margin: 16px 0; border-radius: var(--radius-md); overflow: hidden; border: 1px solid #1e293b; }
+    .code-header {
+      display: flex; justify-content: space-between; align-items: center;
+      padding: 6px 12px; background: #101722; border-bottom: 1px solid #1e293b;
+      font-family: var(--font-mono); font-size: 11px; color: var(--text-muted);
+    }
+    .wiki-prose pre {
+      background: #080c12;
+      padding: 14px;
+      overflow-x: auto;
+      font-family: var(--font-mono);
+      font-size: 13px;
+      line-height: 1.55;
+      color: #e2e8f0;
+    }
+    .wiki-prose blockquote {
+      border-left: 3px solid var(--emerald);
+      background: rgba(16, 185, 129, 0.07);
+      padding: 10px 14px;
+      border-radius: 0 var(--radius-md) var(--radius-md) 0;
+      color: var(--text-muted);
+      margin: 14px 0;
+      font-size: 0.92rem;
+    }
+
+    /* Modals */
+    .modal-backdrop {
+      position: fixed; inset: 0; z-index: 50;
+      background: rgba(3, 6, 11, 0.82);
+      backdrop-filter: blur(6px);
+      display: flex; align-items: center; justify-content: center;
+      padding: 16px;
+    }
+    .modal-card {
+      background: var(--panel);
+      border: 1px solid var(--border-strong);
+      border-radius: var(--radius-xl);
+      width: 100%;
+      max-width: 520px;
+      max-height: 88vh;
+      display: flex; flex-direction: column;
+      overflow: hidden;
+      box-shadow: 0 25px 60px rgba(0, 0, 0, 0.65);
+    }
+    .modal-card-lg { max-width: 820px; }
+    .modal-header {
+      padding: 15px 20px;
+      background: var(--card);
+      border-bottom: 1px solid var(--border);
+      display: flex; align-items: center; justify-content: space-between;
+    }
+    .modal-body { padding: 20px; overflow-y: auto; }
+
+    /* Operator Directory Cards */
+    .operator-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 12px; margin-top: 14px; }
+    .operator-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 14px;
+      display: flex; flex-direction: column; justify-content: space-between; gap: 10px;
+    }
+    .avatar-box {
+      width: 38px; height: 38px; border-radius: var(--radius-md);
+      background: var(--emerald-dim); border: 1px solid rgba(16, 185, 129, 0.4);
+      color: var(--emerald); font-family: var(--font-mono); font-weight: 700;
+      display: flex; align-items: center; justify-content: center; text-transform: uppercase;
+      flex-shrink: 0;
+    }
+
+    /* Split Editor */
+    .editor-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+    .preview-box {
+      height: 370px; overflow-y: auto;
+      background: var(--bg); border: 1px solid var(--border);
+      border-radius: var(--radius-md); padding: 14px;
+    }
+
+    /* Toast */
+    .toast-wrap {
+      position: fixed; bottom: 18px; right: 18px; z-index: 60;
+      display: flex; flex-direction: column; gap: 8px; max-width: 360px;
+    }
+    .toast {
+      padding: 11px 14px; border-radius: var(--radius-md);
+      background: var(--card); border: 1px solid var(--emerald);
+      color: #6ee7b7; font-family: var(--font-mono); font-size: 12px;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
+    }
+    .toast.error { border-color: var(--rose); color: #fda4af; }
+    .toast.info { border-color: var(--cyan); color: #67e8f9; }
+
+    /* Responsive */
+    .mobile-toggle { display: none; }
+    @media (max-width: 960px) {
+      .mobile-toggle { display: inline-flex; }
+      .sidebar {
+        position: fixed; left: 0; top: 59px; z-index: 40;
+        transform: translateX(-100%); transition: transform 0.2s ease;
+        background: var(--panel);
+      }
+      .sidebar.open { transform: translateX(0); }
+      .editor-grid { grid-template-columns: 1fr; }
+      .main-pane { padding: 16px; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- EMBEDDED SNAPSHOT SEED (Updated automatically on standalone HTML export) -->
+  <script id="ARCHON_EMBEDDED_STATE" type="application/json">null</script>
+
+  <!-- Toast Container -->
+  <div id="toast-container" class="toast-wrap"></div>
+
+  <!-- Top Navigation Bar -->
+  <header class="topbar">
+    <div class="topbar-inner">
+      <div class="flex items-center gap-2">
+        <button class="btn mobile-toggle" onclick="app.toggleSidebar()" aria-label="Menu">☰</button>
+        <div class="brand" onclick="app.selectDefaultArticle()">
+          <div class="brand-icon">&gt;_</div>
+          <div>
+            <div class="flex items-center gap-2">
+              <span class="brand-title">ARCHON<span>WIKI</span></span>
+              <span class="badge badge-emerald">v4.0-SOCIAL</span>
+              <span id="sync-status-badge" class="badge badge-cyan">LOCAL-DB</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Global Article Search -->
+      <div class="search-box">
+        <span class="search-icon mono">/</span>
+        <input type="text" id="search-input" class="input" placeholder="Search articles, tags, commands..." />
+        <button id="clear-search-btn" class="search-clear hidden">ESC</button>
+      </div>
+
+      <!-- Action Toolbar -->
+      <div class="flex items-center gap-2" style="flex-wrap: wrap;">
+        <button class="btn btn-purple" style="background: var(--purple-dim); border-color: rgba(168,85,247,0.45); color: #d8b4fe;" onclick="app.openOperatorsModal()">
+          <span>👥 Operators</span>
+          <span id="operator-count-pill" class="badge badge-purple">0</span>
+        </button>
+
+        <button class="btn btn-cyan-ghost" onclick="app.openCheatsheet()">
+          <span>&gt;_ CLI</span>
+        </button>
+
+        <button class="btn btn-emerald-ghost" onclick="app.openEditor()">
+          <span>+ New Page</span>
+        </button>
+
+        <button class="btn" onclick="app.openCloudSyncModal()" title="Connect Supabase for live multi-user sync on GitHub Pages">
+          <span id="cloud-btn-label">☁ Sync</span>
+        </button>
+
+        <button class="btn btn-primary" onclick="app.exportSelfContainedWiki()" title="Download standalone HTML snapshot with all users, follows, blocks & articles">
+          <span>⬇ Export</span>
+        </button>
+
+        <div id="user-nav-area"></div>
+      </div>
+    </div>
+  </header>
+
+  <!-- Workspace -->
+  <div class="workspace">
+    <!-- Left Sidebar -->
+    <aside id="sidebar" class="sidebar">
+      <div class="sidebar-section">
+        <div class="flex items-center justify-between">
+          <span class="section-label">Namespaces</span>
+          <span id="article-count-badge" class="badge badge-emerald">0</span>
+        </div>
+        <div id="category-filters" class="cat-pills"></div>
+      </div>
+
+      <!-- Feed Tabs: All / Following / Bookmarks -->
+      <div class="sidebar-tabs">
+        <button id="tab-all" class="sidebar-tab active" onclick="app.setSidebarFilter('all')">All</button>
+        <button id="tab-following" class="sidebar-tab" onclick="app.setSidebarFilter('following')">
+          <span>Following</span>
+          <span id="following-count" class="badge badge-purple">0</span>
+        </button>
+        <button id="tab-bookmarks" class="sidebar-tab" onclick="app.setSidebarFilter('bookmarks')">
+          <span>Saved</span>
+          <span id="bookmark-count" class="badge badge-amber">0</span>
+        </button>
+      </div>
+
+      <!-- Article List -->
+      <div id="article-list" class="article-list"></div>
+
+      <!-- Storage & Crypto Status -->
+      <div class="sidebar-footer">
+        <div class="flex items-center justify-between">
+          <span class="flex items-center gap-2">
+            <span class="pulse-dot"></span>
+            <span id="db-engine-label">INDEXEDDB + PBKDF2</span>
+          </span>
+          <span id="storage-size-label">0 KB</span>
+        </div>
+      </div>
+    </aside>
+
+    <!-- Main Reader / Editor Pane -->
+    <main class="main-pane">
+      <div id="main-content-area"></div>
+    </main>
+  </div>
+
+  <!-- ===================================================================== -->
+  <!-- MODAL 1: OPERATOR AUTH & PROFILE                                      -->
+  <!-- ===================================================================== -->
+  <div id="auth-modal" class="modal-backdrop hidden">
+    <div class="modal-card">
+      <div class="modal-header">
+        <span id="auth-modal-title" class="mono" style="font-weight: 700; font-size: 13px; color: #fff;">Operator Authentication</span>
+        <button class="btn btn-sm" onclick="app.closeModal('auth-modal')">✕</button>
+      </div>
+      <div id="auth-modal-body" class="modal-body"></div>
+    </div>
+  </div>
+
+  <!-- ===================================================================== -->
+  <!-- MODAL 2: OPERATOR DIRECTORY (SEARCH, FOLLOW & BLOCK USERS)            -->
+  <!-- ===================================================================== -->
+  <div id="operators-modal" class="modal-backdrop hidden">
+    <div class="modal-card modal-card-lg">
+      <div class="modal-header">
+        <div class="flex items-center gap-2">
+          <span class="mono" style="color: #c084fc; font-weight: 700;">👥 Operator Directory</span>
+          <span class="badge badge-purple">Search • Follow • Block</span>
+        </div>
+        <button class="btn btn-sm" onclick="app.closeModal('operators-modal')">✕</button>
+      </div>
+      <div class="modal-body">
+        <div class="flex items-center gap-2" style="flex-wrap: wrap; margin-bottom: 12px;">
+          <input type="text" id="operator-search-input" class="input" style="flex: 1; min-width: 220px;"
+            oninput="app.renderOperatorsDirectory()"
+            placeholder="Search operators by @username, distro, or bio..." />
+          <div class="flex gap-1">
+            <button id="op-tab-all" class="btn btn-sm btn-emerald-ghost" onclick="app.setOperatorTab('all')">All Users</button>
+            <button id="op-tab-following" class="btn btn-sm" onclick="app.setOperatorTab('following')">Following</button>
+            <button id="op-tab-blocked" class="btn btn-sm" onclick="app.setOperatorTab('blocked')">Blocked</button>
+          </div>
+        </div>
+        <div id="operators-directory-list" class="operator-grid"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===================================================================== -->
+  <!-- MODAL 3: PUBLIC OPERATOR PROFILE INSPECTOR                            -->
+  <!-- ===================================================================== -->
+  <div id="profile-inspector-modal" class="modal-backdrop hidden">
+    <div class="modal-card">
+      <div class="modal-header">
+        <span id="inspector-title" class="mono" style="font-weight: 700; font-size: 13px; color: #fff;">Operator Profile</span>
+        <button class="btn btn-sm" onclick="app.closeModal('profile-inspector-modal')">✕</button>
+      </div>
+      <div id="inspector-body" class="modal-body"></div>
+    </div>
+  </div>
+
+  <!-- ===================================================================== -->
+  <!-- MODAL 4: LIVE CLOUD SYNC SETUP (SUPABASE FOR GITHUB PAGES)            -->
+  <!-- ===================================================================== -->
+  <div id="cloud-modal" class="modal-backdrop hidden">
+    <div class="modal-card modal-card-lg">
+      <div class="modal-header">
+        <span class="mono" style="font-weight: 700; font-size: 13px; color: #22d3ee;">☁ Live Multi-User Cloud Sync (Optional)</span>
+        <button class="btn btn-sm" onclick="app.closeModal('cloud-modal')">✕</button>
+      </div>
+      <div class="modal-body" style="display: flex; flex-direction: column; gap: 14px;">
+        <p style="font-size: 13px; color: var(--text-muted); line-height: 1.55;">
+          By default, ArchonWiki saves locally to <strong>IndexedDB</strong> and exports standalone <code>.html</code> snapshots. To let everyone visiting your <strong>GitHub Pages</strong> site share accounts, posts, follows, and blocks in real time, connect a free <strong>Supabase</strong> project:
+        </p>
+
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+          <div>
+            <label class="section-label" style="display:block; margin-bottom: 5px;">Supabase Project URL</label>
+            <input type="text" id="sb-url-input" class="input" placeholder="https://xyzcompany.supabase.co" />
+          </div>
+          <div>
+            <label class="section-label" style="display:block; margin-bottom: 5px;">Supabase Anon Public Key</label>
+            <input type="text" id="sb-key-input" class="input" placeholder="eyJhbGciOiJIUzI1NiIsInR5cCI6..." />
+          </div>
+        </div>
+
+        <div class="flex gap-2">
+          <button class="btn btn-primary" onclick="app.saveCloudConfig()">Connect & Sync Live</button>
+          <button class="btn btn-rose-ghost" onclick="app.disconnectCloud()">Disconnect (Use Local DB)</button>
+          <button class="btn" onclick="app.exportJsonBackup()">Export JSON</button>
+          <label class="btn" style="cursor: pointer;">
+            Import / Merge JSON
+            <input type="file" accept=".json" class="hidden" onchange="app.importJsonMerge(event)" />
+          </label>
+        </div>
+
+        <div class="code-wrap" style="margin: 4px 0 0;">
+          <div class="code-header">
+            <span>Supabase SQL Setup (Run once in Supabase SQL Editor)</span>
+            <button class="btn btn-sm btn-emerald-ghost" onclick="app.copySupabaseSql()">Copy SQL</button>
+          </div>
+          <pre id="supabase-sql-snippet" style="font-size: 11px; max-height: 170px;">create table if not exists archon_users (
+  username text primary key,
+  password_hash text not null,
+  salt text not null,
+  role text default 'Arch / Hyprland',
+  bio text default '',
+  following jsonb default '[]'::jsonb,
+  blocked jsonb default '[]'::jsonb,
+  bookmarks jsonb default '[]'::jsonb,
+  created_at text
+);
+
+create table if not exists archon_articles (
+  id text primary key,
+  title text not null,
+  category text not null,
+  tags jsonb default '[]'::jsonb,
+  author text not null,
+  updated_at text,
+  content text not null
+);
+
+alter table archon_users enable row level security;
+alter table archon_articles enable row level security;
+create policy "Public read/write users" on archon_users for all using (true) with check (true);
+create policy "Public read/write articles" on archon_articles for all using (true) with check (true);</pre>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===================================================================== -->
+  <!-- MODAL 5: CLI CHEAT-SHEET                                              -->
+  <!-- ===================================================================== -->
+  <div id="cheatsheet-modal" class="modal-backdrop hidden">
+    <div class="modal-card modal-card-lg">
+      <div class="modal-header">
+        <span class="mono" style="font-weight: 700; font-size: 13px; color: #22d3ee;">&gt;_ Linux Sysadmin CLI Cheat-Sheet</span>
+        <button class="btn btn-sm" onclick="app.closeModal('cheatsheet-modal')">✕</button>
+      </div>
+      <div class="modal-body">
+        <input type="text" id="cheatsheet-filter" class="input" oninput="app.renderCheatsheet(this.value)" placeholder="Filter commands (pacman, debootstrap, journalctl, ss, btrfs, hyprctl)..." />
+        <div id="cheatsheet-list" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 10px; margin-top: 14px;"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===================================================================== -->
+  <!-- CORE ENGINE: PBKDF2 CRYPTO + INDEXEDDB + SOCIAL GRAPH + CLOUD SYNC    -->
+  <!-- ===================================================================== -->
+  <script>
+    const SEED_USERS = {
+      'archon_root': {
+        username: 'archon_root',
+        passwordHash: 'seeded_system_account',
+        salt: '0000',
+        role: 'Arch / Hyprland',
+        bio: 'Kernel tinkerer, Wayland compositor optimizer, and ArchonWiki maintainer.',
+        createdAt: '2026-10-01',
+        following: ['nix_builder'],
+        blocked: [],
+        bookmarks: ['arch-post-install'],
+        notes: {}
+      },
+      'nix_builder': {
+        username: 'nix_builder',
+        passwordHash: 'seeded_system_account',
+        salt: '0000',
+        role: 'NixOS / Flakes',
+        bio: 'Reproducible builds, declarative dotfiles, and rootless OCI containers.',
+        createdAt: '2026-10-12',
+        following: ['archon_root'],
+        blocked: [],
+        bookmarks: ['nix-flakes-home-manager'],
+        notes: {}
+      },
+      'debian_craft': {
+        username: 'debian_craft',
+        passwordHash: 'seeded_system_account',
+        salt: '0000',
+        role: 'Debian / debootstrap',
+        bio: 'Manual terminal installs across multi-drive setups, GRUB rescue, and minimal servers.',
+        createdAt: '2026-10-20',
+        following: ['archon_root'],
+        blocked: [],
+        bookmarks: ['debian-debootstrap-multiboot'],
+        notes: {}
+      }
+    };
+
+    const DEFAULT_ARTICLES = [
+      {
+        id: 'arch-post-install',
+        title: 'Arch Linux: Hardened Post-Install & Pacman Optimization',
+        category: 'Distros',
+        tags: ['arch', 'pacman', 'paru', 'btrfs', 'reflector'],
+        author: 'archon_root',
+        updatedAt: '2026-11-02',
+        content: `# Arch Linux: Hardened Post-Install & Pacman Optimization
+
+A clean Arch Linux base installation requires immediate tuning for parallel downloads, mirror latency optimization, and automated snapshot recovery.
+
+## 1. Pacman Parallelism & Visual Candy
+Edit \`/etc/pacman.conf\` to enable concurrent package downloads and color output:
+
+\`\`\`ini
+[options]
+Color
+ILoveCandy
+ParallelDownloads = 10
+VerbosePkgLists
+\`\`\`
+
+## 2. Mirrorlist Synchronization via Reflector
+Automate fetching the fastest HTTPS mirrors synced within the last 12 hours:
+
+\`\`\`bash
+sudo pacman -S --needed reflector
+sudo reflector --latest 15 --protocol https --sort rate --save /etc/pacman.d/mirrorlist
+sudo systemctl enable --now reflector.timer
+\`\`\`
+
+## 3. Building an AUR Helper (paru)
+Compile \`paru\` cleanly inside a temporary directory:
+
+\`\`\`bash
+sudo pacman -S --needed base-devel git rust
+git clone https://aur.archlinux.org/paru.git /tmp/paru
+cd /tmp/paru && makepkg -si
+\`\`\``
+      },
+      {
+        id: 'debian-debootstrap-multiboot',
+        title: 'Debian Manual Install via debootstrap & Multi-Boot GRUB',
+        category: 'Distros',
+        tags: ['debian', 'debootstrap', 'chroot', 'grub', 'multiboot'],
+        author: 'debian_craft',
+        updatedAt: '2026-11-11',
+        content: `# Debian Manual Install via debootstrap & Multi-Boot GRUB
+
+Installing Debian manually from an existing Linux host using \`debootstrap\` gives you total partition control without bloated graphical installers.
+
+## 1. Bootstrap Base Root Filesystem
+Mount your target partition at \`/mnt/debian\` and pull a clean Debian Bookworm/Trixie base:
+
+\`\`\`bash
+sudo apt install debootstrap arch-install-scripts
+sudo mkfs.ext4 -L debian_root /dev/sdb3
+sudo mount /dev/sdb3 /mnt/debian
+sudo debootstrap --arch=amd64 bookworm /mnt/debian https://deb.debian.org/debian/
+\`\`\`
+
+## 2. Generate fstab & Chroot
+Generate UUID-based mount entries and enter the new system:
+
+\`\`\`bash
+genfstab -U /mnt/debian | sudo tee /mnt/debian/etc/fstab
+sudo arch-chroot /mnt/debian /bin/bash
+\`\`\`
+
+## 3. Kernel, Firmware & Multi-Boot Detection
+Inside the chroot, install the kernel, network tools, and enable \`os-prober\` so GRUB detects sibling distros:
+
+\`\`\`bash
+apt update && apt install -y linux-image-amd64 systemd-sysv network-manager sudo grub-efi-amd64 os-prober
+echo "GRUB_DISABLE_OS_PROBER=false" >> /etc/default/grub
+update-grub
+\`\`\``
+      },
+      {
+        id: 'nix-flakes-home-manager',
+        title: 'NixOS & Flakes: Declarative Reproducible Environments',
+        category: 'Distros',
+        tags: ['nix', 'nixos', 'flakes', 'declarative'],
+        author: 'nix_builder',
+        updatedAt: '2026-11-05',
+        content: `# NixOS & Flakes: Declarative Reproducible Environments
+
+Nix eliminates configuration drift by treating entire operating systems and development shells as pure functional derivations stored under \`/nix/store\`.
+
+## 1. Enable Flakes Globally
+Add experimental features to \`/etc/nixos/configuration.nix\`:
+
+\`\`\`nix
+{ config, pkgs, ... }:
+{
+  nix.settings.experimental-features = [ "nix-command" "flakes" ];
+  nix.gc = {
+    automatic = true;
+    dates = "weekly";
+    options = "--delete-older-than 14d";
+  };
+}
+\`\`\`
+
+## 2. Atomic Rollbacks
+Switch generations or roll back immediately if a kernel/driver update misbehaves:
+
+\`\`\`bash
+sudo nixos-rebuild switch --flake .#workstation
+sudo nixos-rebuild switch --rollback
+\`\`\``
+      },
+      {
+        id: 'kernel-tuning-boot',
+        title: 'Linux Kernel: Sysctl Tuning, BBR & Unified Kernel Images',
+        category: 'Kernel & Boot',
+        tags: ['kernel', 'sysctl', 'uki', 'bbr', 'zram'],
+        author: 'archon_root',
+        updatedAt: '2026-11-07',
+        content: `# Linux Kernel: Sysctl Tuning, BBR & Unified Kernel Images
+
+Tune virtual memory pressure, enable BBR TCP congestion control, and harden kernel pointer exposure.
+
+## 1. High-Responsiveness \`/etc/sysctl.d/99-workstation.conf\`
+
+\`\`\`ini
+vm.swappiness = 10
+vm.vfs_cache_pressure = 50
+net.core.default_qdisc = cake
+net.ipv4.tcp_congestion_control = bbr
+kernel.kptr_restrict = 2
+kernel.dmesg_restrict = 1
+\`\`\`
+
+Reload parameters live:
+
+\`\`\`bash
+sudo sysctl --system
+\`\`\``
+      },
+      {
+        id: 'hyprland-wayland-rice',
+        title: 'Hyprland & Wayland: Zero-Tear Tiling Compositor Setup',
+        category: 'Window Managers',
+        tags: ['hyprland', 'wayland', 'pipewire', 'xdg-desktop-portal'],
+        author: 'archon_root',
+        updatedAt: '2026-11-09',
+        content: `# Hyprland & Wayland: Zero-Tear Tiling Compositor Setup
+
+Configure XDG portals, PipeWire audio/screen-capture, and crisp Bezier animations in \`~/.config/hypr/hyprland.conf\`.
+
+## 1. Core Wayland Stack
+
+\`\`\`bash
+sudo pacman -S hyprland xdg-desktop-portal-hyprland pipewire wireplumber kitty rofi-wayland grim slurp wl-clipboard
+\`\`\`
+
+## 2. Keybindings & Border Styling
+
+\`\`\`ini
+general {
+    gaps_in = 5
+    gaps_out = 10
+    border_size = 2
+    col.active_border = rgba(10b981ee) rgba(06b6d4ee) 45deg
+    col.inactive_border = rgba(222c3caa)
+}
+
+$mainMod = SUPER
+bind = $mainMod, Return, exec, kitty
+bind = $mainMod, D, exec, rofi -show drun
+bind = $mainMod, Q, killactive,
+\`\`\``
+      },
+      {
+        id: 'podman-local-ai-gpu',
+        title: 'Rootless Podman & Local LLM Inference on Linux GPUs',
+        category: 'Containers & Local AI',
+        tags: ['podman', 'containers', 'ollama', 'cuda', 'local-ai'],
+        author: 'nix_builder',
+        updatedAt: '2026-11-12',
+        content: `# Rootless Podman & Local LLM Inference on Linux GPUs
+
+Run daemonless OCI containers and local coding models with GPU acceleration.
+
+## 1. Rootless Subuid Range Setup
+
+\`\`\`bash
+sudo usermod --add-subuids 100000-165535 --add-subgids 100000-165535 $USER
+podman system migrate
+systemctl --user enable --now podman.socket
+\`\`\`
+
+## 2. Local Coding Model via Ollama
+
+\`\`\`bash
+ollama pull qwen2.5-coder:1.5b
+ollama run qwen2.5-coder:1.5b
+\`\`\``
+      }
+    ];
+
+    const CHEATSHEET_COMMANDS = [
+      { cmd: 'sudo pacman -Syu', desc: 'Sync Arch package databases and upgrade all packages', cat: 'Arch' },
+      { cmd: 'pacman -Qdtq | sudo pacman -Rns -', desc: 'Remove orphaned unused package dependencies', cat: 'Arch' },
+      { cmd: 'sudo debootstrap bookworm /mnt/deb', desc: 'Bootstrap a clean Debian root filesystem into /mnt/deb', cat: 'Debian' },
+      { cmd: 'journalctl -p 3 -xb', desc: 'Display all boot errors from current systemd boot', cat: 'Systemd' },
+      { cmd: 'ss -tulpn', desc: 'List listening TCP/UDP ports and owning processes', cat: 'Network' },
+      { cmd: 'lsblk -f', desc: 'Show drives, partitions, filesystems, UUIDs & mounts', cat: 'Storage' },
+      { cmd: 'hyprctl clients', desc: 'Inspect open Wayland windows, workspaces & class names', cat: 'Hyprland' },
+      { cmd: 'nvidia-smi', desc: 'Monitor NVIDIA GPU VRAM allocation, clocks & processes', cat: 'GPU' }
+    ];
+
+    /**
+     * IndexedDB Wrapper for Large Local Storage
+     */
+    class LocalIndexedStore {
+      constructor(dbName = 'ArchonWikiV4DB', storeName = 'wiki_state') {
+        this.dbName = dbName;
+        this.storeName = storeName;
+      }
+      open() {
+        return new Promise((resolve, reject) => {
+          if (!window.indexedDB) return reject(new Error('IndexedDB unavailable'));
+          const req = indexedDB.open(this.dbName, 1);
+          req.onupgradeneeded = () => {
+            const db = req.result;
+            if (!db.objectStoreNames.contains(this.storeName)) {
+              db.createObjectStore(this.storeName);
+            }
+          };
+          req.onsuccess = () => resolve(req.result);
+          req.onerror = () => reject(req.error);
+        });
+      }
+      async get(key) {
+        try {
+          const db = await this.open();
+          return await new Promise((resolve, reject) => {
+            const tx = db.transaction(this.storeName, 'readonly');
+            const req = tx.objectStore(this.storeName).get(key);
+            req.onsuccess = () => resolve(req.result || null);
+            req.onerror = () => reject(req.error);
+          });
+        } catch (e) {
+          const raw = localStorage.getItem(key);
+          return raw ? JSON.parse(raw) : null;
+        }
+      }
+      async set(key, val) {
+        try {
+          const db = await this.open();
+          await new Promise((resolve, reject) => {
+            const tx = db.transaction(this.storeName, 'readwrite');
+            const req = tx.objectStore(this.storeName).put(val, key);
+            req.onsuccess = () => resolve();
+            req.onerror = () => reject(req.error);
+          });
+        } catch (e) {
+          localStorage.setItem(key, JSON.stringify(val));
+        }
+      }
+    }
+
+    /**
+     * Main Application Controller
+     */
+    class ArchonSocialWikiApp {
+      constructor() {
+        this.STATE_KEY = 'ARCHON_V4_MASTER_STATE';
+        this.CLOUD_KEY = 'ARCHON_V4_SUPABASE_CFG';
+        this.CATEGORIES = ['All', 'Distros', 'Kernel & Boot', 'Window Managers', 'CLI & Scripting', 'Containers & Local AI'];
+        this.db = new LocalIndexedStore();
+
+        this.state = {
+          users: {},
+          currentUser: null,
+          articles: []
+        };
+
+        this.cloud = {
+          url: '',
+          anonKey: '',
+          connected: false
+        };
+
+        this.ui = {
+          selectedArticleId: null,
+          selectedCategory: 'All',
+          sidebarFilter: 'all', // 'all' | 'following' | 'bookmarks'
+          searchQuery: '',
+          mode: 'view',         // 'view' | 'edit' | 'create'
+          editingArticleId: null,
+          operatorTab: 'all'    // 'all' | 'following' | 'blocked'
+        };
+
+        this.init();
+      }
+
+      async init() {
+        // Load optional Supabase cloud config
+        try {
+          const savedCloud = JSON.parse(localStorage.getItem(this.CLOUD_KEY) || 'null');
+          if (savedCloud && savedCloud.url && savedCloud.anonKey) {
+            this.cloud = { ...savedCloud, connected: true };
+          }
+        } catch (e) {}
+
+        // Load embedded state or IndexedDB
+        let embedded = null;
+        const seedEl = document.getElementById('ARCHON_EMBEDDED_STATE');
+        if (seedEl && seedEl.textContent.trim() !== 'null' && seedEl.textContent.trim() !== '') {
+          try { embedded = JSON.parse(seedEl.textContent); } catch (e) {}
+        }
+
+        const stored = await this.db.get(this.STATE_KEY);
+        if (stored && Array.isArray(stored.articles) && stored.articles.length > 0) {
+          this.state = stored;
+        } else if (embedded && Array.isArray(embedded.articles)) {
+          this.state = embedded;
+          await this.saveState();
+        } else {
+          this.state = {
+            users: JSON.parse(JSON.stringify(SEED_USERS)),
+            currentUser: null,
+            articles: JSON.parse(JSON.stringify(DEFAULT_ARTICLES))
+          };
+          await this.saveState();
+        }
+
+        // Ensure seeded operators exist so user search is immediately populated
+        Object.keys(SEED_USERS).forEach(u => {
+          if (!this.state.users[u]) {
+            this.state.users[u] = JSON.parse(JSON.stringify(SEED_USERS[u]));
+          }
+        });
+
+        this.ui.selectedArticleId = this.getVisibleArticles()[0]?.id || this.state.articles[0]?.id || null;
+        this.bindEvents();
+        this.renderAll();
+
+        if (this.cloud.connected) {
+          await this.syncFromCloud(true);
+        }
+      }
+
+      async saveState() {
+        await this.db.set(this.STATE_KEY, this.state);
+        const bytes = new Blob([JSON.stringify(this.state)]).size;
+        const sizeEl = document.getElementById('storage-size-label');
+        if (sizeEl) sizeEl.textContent = (bytes / 1024).toFixed(1) + ' KB';
+      }
+
+      /* =================================================================== */
+      /* WEB CRYPTO API (PBKDF2-SHA256 + 128-BIT RANDOM SALT)                */
+      /* =================================================================== */
+
+      generateSaltHex(bytes = 16) {
+        const arr = new Uint8Array(bytes);
+        if (window.crypto && window.crypto.getRandomValues) {
+          window.crypto.getRandomValues(arr);
+        } else {
+          for (let i = 0; i < bytes; i++) arr[i] = Math.floor(Math.random() * 256);
+        }
+        return Array.from(arr).map(b => b.toString(16).padStart(2, '0')).join('');
+      }
+
+      async hashPasswordPBKDF2(password, saltHex) {
+        if (window.crypto && window.crypto.subtle) {
+          const enc = new TextEncoder();
+          const keyMaterial = await window.crypto.subtle.importKey(
+            'raw', enc.encode(password), { name: 'PBKDF2' }, false, ['deriveBits']
+          );
+          const saltBytes = new Uint8Array(saltHex.match(/.{1,2}/g).map(b => parseInt(b, 16)));
+          const bits = await window.crypto.subtle.deriveBits(
+            { name: 'PBKDF2', salt: saltBytes, iterations: 120000, hash: 'SHA-256' },
+            keyMaterial,
+            256
+          );
+          return 'pbkdf2_sha256$' + Array.from(new Uint8Array(bits)).map(b => b.toString(16).padStart(2, '0')).join('');
+        }
+        // Fallback if opened in restricted non-secure context
+        let h = 2166136261;
+        const combo = saltHex + ':' + password;
+        for (let i = 0; i < combo.length; i++) {
+          h ^= combo.charCodeAt(i);
+          h = Math.imul(h, 16777619);
+        }
+        return 'fallback$' + (h >>> 0).toString(16);
+      }
+
+      getCurrentUser() {
+        return this.state.currentUser ? (this.state.users[this.state.currentUser] || null) : null;
+      }
+
+      /* =================================================================== */
+      /* FOLLOW & BLOCK USER GRAPH ENGINE                                    */
+      /* =================================================================== */
+
+      isFollowing(targetUsername) {
+        const me = this.getCurrentUser();
+        if (!me || !Array.isArray(me.following)) return false;
+        return me.following.includes(targetUsername);
+      }
+
+      isBlocked(targetUsername) {
+        const me = this.getCurrentUser();
+        if (!me || !Array.isArray(me.blocked)) return false;
+        return me.blocked.includes(targetUsername);
+      }
+
+      getFollowerCount(username) {
+        return Object.values(this.state.users).filter(
+          u => Array.isArray(u.following) && u.following.includes(username) && !(u.blocked || []).includes(username)
+        ).length;
+      }
+
+      async toggleFollowUser(targetUsername) {
+        const me = this.getCurrentUser();
+        if (!me) {
+          this.toast('Log in or create an account to follow operators.', 'info');
+          this.openAuthModal('login');
+          return;
+        }
+        if (me.username === targetUsername) return;
+
+        if (!Array.isArray(me.following)) me.following = [];
+        if (!Array.isArray(me.blocked)) me.blocked = [];
+
+        if (me.blocked.includes(targetUsername)) {
+          this.toast(`Unblock @${targetUsername} before following them.`, 'error');
+          return;
+        }
+
+        const idx = me.following.indexOf(targetUsername);
+        if (idx === -1) {
+          me.following.push(targetUsername);
+          this.toast(`Now following @${targetUsername}`, 'success');
+        } else {
+          me.following.splice(idx, 1);
+          this.toast(`Unfollowed @${targetUsername}`, 'info');
+        }
+
+        await this.saveState();
+        await this.pushUserToCloud(me);
+        this.renderAll();
+        this.renderOperatorsDirectory();
+      }
+
+      async toggleBlockUser(targetUsername) {
+        const me = this.getCurrentUser();
+        if (!me) {
+          this.toast('Log in or create an account to block operators.', 'info');
+          this.openAuthModal('login');
+          return;
+        }
+        if (me.username === targetUsername) return;
+
+        if (!Array.isArray(me.blocked)) me.blocked = [];
+        if (!Array.isArray(me.following)) me.following = [];
+
+        const idx = me.blocked.indexOf(targetUsername);
+        if (idx === -1) {
+          me.blocked.push(targetUsername);
+          // Automatically unfollow when blocking
+          me.following = me.following.filter(u => u !== targetUsername);
+          this.toast(`Blocked @${targetUsername}. Their articles are now hidden.`, 'info');
+        } else {
+          me.blocked.splice(idx, 1);
+          this.toast(`Unblocked @${targetUsername}.`, 'success');
+        }
+
+        await this.saveState();
+        await this.pushUserToCloud(me);
+
+        // If currently viewing an article by the newly blocked user, switch away
+        const currentArt = this.state.articles.find(a => a.id === this.ui.selectedArticleId);
+        if (currentArt && this.isBlocked(currentArt.author)) {
+          this.ui.selectedArticleId = this.getVisibleArticles()[0]?.id || null;
+        }
+
+        this.renderAll();
+        this.renderOperatorsDirectory();
+      }
+
+      /* =================================================================== */
+      /* OPERATOR DIRECTORY & PUBLIC PROFILE INSPECTOR                       */
+      /* =================================================================== */
+
+      openOperatorsModal() {
+        document.getElementById('operator-search-input').value = '';
+        this.ui.operatorTab = 'all';
+        this.updateOperatorTabStyles();
+        this.renderOperatorsDirectory();
+        this.openModal('operators-modal');
+      }
+
+      setOperatorTab(tab) {
+        this.ui.operatorTab = tab;
+        this.updateOperatorTabStyles();
+        this.renderOperatorsDirectory();
+      }
+
+      updateOperatorTabStyles() {
+        ['all', 'following', 'blocked'].forEach(t => {
+          const el = document.getElementById('op-tab-' + t);
+          if (!el) return;
+          el.className = t === this.ui.operatorTab ? 'btn btn-sm btn-emerald-ghost' : 'btn btn-sm';
+        });
+      }
+
+      renderOperatorsDirectory() {
+        const listEl = document.getElementById('operators-directory-list');
+        if (!listEl) return;
+
+        const q = (document.getElementById('operator-search-input')?.value || '').trim().toLowerCase();
+        const me = this.getCurrentUser();
+        const allUsers = Object.values(this.state.users);
+
+        const filtered = allUsers.filter(u => {
+          const blocked = this.isBlocked(u.username);
+          const following = this.isFollowing(u.username);
+
+          if (this.ui.operatorTab === 'following' && !following) return false;
+          if (this.ui.operatorTab === 'blocked' && !blocked) return false;
+          if (this.ui.operatorTab === 'all' && blocked) return false; // Hide blocked users from default directory
+
+          if (!q) return true;
+          return (
+            u.username.toLowerCase().includes(q) ||
+            (u.role || '').toLowerCase().includes(q) ||
+            (u.bio || '').toLowerCase().includes(q)
+          );
+        });
+
+        if (filtered.length === 0) {
+          listEl.innerHTML = `<div class="mono" style="grid-column: 1/-1; text-align:center; padding: 28px; color: var(--text-dim); border: 1px dashed var(--border); border-radius: 12px;">No matching operators in this view.</div>`;
+          return;
+        }
+
+        listEl.innerHTML = filtered.map(u => {
+          const isMe = me && me.username === u.username;
+          const following = this.isFollowing(u.username);
+          const blocked = this.isBlocked(u.username);
+          const postCount = this.state.articles.filter(a => a.author === u.username).length;
+          const followers = this.getFollowerCount(u.username);
+
+          return `
+            <div class="operator-card">
+              <div>
+                <div class="flex items-center justify-between gap-2">
+                  <div class="flex items-center gap-2" style="cursor:pointer;" onclick="app.inspectOperatorProfile('${this.escapeHtml(u.username)}')">
+                    <div class="avatar-box">${this.escapeHtml(u.username.slice(0, 2))}</div>
+                    <div>
+                      <div class="mono" style="font-weight: 700; font-size: 13px; color: #fff;">
+                        @${this.escapeHtml(u.username)} ${isMe ? '<span class="badge badge-emerald">YOU</span>' : ''}
+                      </div>
+                      <div class="mono" style="font-size: 11px; color: var(--cyan);">${this.escapeHtml(u.role || 'Linux User')}</div>
+                    </div>
+                  </div>
+                </div>
+
+                <p style="font-size: 12px; color: var(--text-muted); margin: 10px 0; line-height: 1.45;">
+                  ${this.escapeHtml(u.bio || 'No bio configured yet.')}
+                </p>
+
+                <div class="mono" style="font-size: 11px; color: var(--text-dim); display: flex; gap: 10px;">
+                  <span><strong style="color: var(--text);">${postCount}</strong> pages</span>
+                  <span><strong style="color: var(--text);">${followers}</strong> followers</span>
+                </div>
+              </div>
+
+              <div class="flex items-center gap-2" style="padding-top: 8px; border-top: 1px solid var(--border);">
+                <button class="btn btn-sm" style="flex:1;" onclick="app.inspectOperatorProfile('${this.escapeHtml(u.username)}')">Profile</button>
+                ${!isMe ? `
+                  ${!blocked ? `
+                    <button class="btn btn-sm ${following ? 'btn-emerald-ghost' : 'btn-primary'}" onclick="app.toggleFollowUser('${this.escapeHtml(u.username)}')">
+                      ${following ? '✓ Following' : '+ Follow'}
+                    </button>
+                  ` : ''}
+                  <button class="btn btn-sm ${blocked ? 'btn-amber-ghost' : 'btn-rose-ghost'}" onclick="app.toggleBlockUser('${this.escapeHtml(u.username)}')">
+                    ${blocked ? 'Unblock' : 'Block'}
+                  </button>
+                ` : ''}
+              </div>
+            </div>
+          `;
+        }).join('');
+      }
+
+      inspectOperatorProfile(username) {
+        const u = this.state.users[username];
+        if (!u) return;
+
+        const me = this.getCurrentUser();
+        const isMe = me && me.username === username;
+        const following = this.isFollowing(username);
+        const blocked = this.isBlocked(username);
+        const userArticles = this.state.articles.filter(a => a.author === username);
+        const followers = this.getFollowerCount(username);
+
+        document.getElementById('inspector-title').textContent = `Operator // @${username}`;
+        document.getElementById('inspector-body').innerHTML = `
+          <div style="display: flex; flex-direction: column; gap: 16px;">
+            <div class="flex items-center justify-between gap-3" style="flex-wrap: wrap;">
+              <div class="flex items-center gap-3">
+                <div class="avatar-box" style="width: 48px; height: 48px; font-size: 18px;">${this.escapeHtml(username.slice(0, 2))}</div>
+                <div>
+                  <div class="mono" style="font-size: 16px; font-weight: 700; color: #fff;">@${this.escapeHtml(username)}</div>
+                  <div class="mono" style="font-size: 12px; color: var(--cyan);">${this.escapeHtml(u.role || 'Linux Operator')}</div>
+                  <div class="mono" style="font-size: 11px; color: var(--text-dim);">Joined ${this.escapeHtml(u.createdAt || '2026')} • ${followers} followers</div>
+                </div>
+              </div>
+
+              ${!isMe ? `
+                <div class="flex gap-2">
+                  ${!blocked ? `
+                    <button class="btn btn-sm ${following ? 'btn-emerald-ghost' : 'btn-primary'}" onclick="app.toggleFollowUser('${this.escapeHtml(username)}'); app.inspectOperatorProfile('${this.escapeHtml(username)}');">
+                      ${following ? '✓ Following' : '+ Follow'}
+                    </button>
+                  ` : ''}
+                  <button class="btn btn-sm ${blocked ? 'btn-amber-ghost' : 'btn-rose-ghost'}" onclick="app.toggleBlockUser('${this.escapeHtml(username)}'); app.inspectOperatorProfile('${this.escapeHtml(username)}');">
+                    ${blocked ? 'Unblock User' : 'Block User'}
+                  </button>
+                </div>
+              ` : ''}
+            </div>
+
+            <p style="font-size: 13px; color: var(--text-muted); background: var(--bg); padding: 12px; border-radius: 10px; border: 1px solid var(--border);">
+              ${this.escapeHtml(u.bio || 'No operator bio set.')}
+            </p>
+
+            <div>
+              <div class="section-label" style="margin-bottom: 8px;">Published Wiki Pages (${userArticles.length})</div>
+              ${blocked ? `
+                <div class="mono" style="font-size: 12px; color: #fb7185; padding: 12px; background: var(--rose-dim); border-radius: 10px;">
+                  You have blocked @${this.escapeHtml(username)}. Unblock to view their wiki entries.
+                </div>
+              ` : userArticles.length === 0 ? `
+                <div class="mono" style="font-size: 12px; color: var(--text-dim);">No articles published yet.</div>
+              ` : `
+                <div style="display: flex; flex-direction: column; gap: 6px;">
+                  ${userArticles.map(art => `
+                    <div class="article-card" onclick="app.closeModal('profile-inspector-modal'); app.closeModal('operators-modal'); app.selectArticle('${art.id}')">
+                      <div class="flex items-center justify-between">
+                        <span class="badge badge-cyan">${this.escapeHtml(art.category)}</span>
+                        <span class="mono" style="font-size: 10px; color: var(--text-dim);">${this.escapeHtml(art.updatedAt)}</span>
+                      </div>
+                      <div class="article-card-title">${this.escapeHtml(art.title)}</div>
+                    </div>
+                  `).join('')}
+                </div>
+              `}
+            </div>
+          </div>
+        `;
+        this.openModal('profile-inspector-modal');
+      }
+
+      /* =================================================================== */
+      /* AUTHENTICATION & ACCOUNT SETTINGS                                   */
+      /* =================================================================== */
+
+      openAuthModal(mode = 'login') {
+        const me = this.getCurrentUser();
+        const title = document.getElementById('auth-modal-title');
+        const body = document.getElementById('auth-modal-body');
+
+        if (me) {
+          title.textContent = `Account // @${me.username}`;
+          const myPages = this.state.articles.filter(a => a.author === me.username).length;
+          body.innerHTML = `
+            <div style="display: flex; flex-direction: column; gap: 14px;">
+              <div class="flex items-center gap-3" style="background: var(--bg); padding: 14px; border-radius: 12px; border: 1px solid var(--border);">
+                <div class="avatar-box" style="width: 46px; height: 46px; font-size: 17px;">${this.escapeHtml(me.username.slice(0, 2))}</div>
+                <div>
+                  <div class="mono" style="font-weight: 700; color: #fff;">@${this.escapeHtml(me.username)}</div>
+                  <div class="mono" style="font-size: 11px; color: var(--emerald);">PBKDF2-SHA256 Verified • ${this.escapeHtml(me.role)}</div>
+                </div>
+              </div>
+
+              <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; text-align: center;" class="mono">
+                <div style="background: var(--card); padding: 10px; border-radius: 10px; border: 1px solid var(--border);">
+                  <div style="font-size: 16px; font-weight: 700; color: var(--emerald);">${myPages}</div>
+                  <div style="font-size: 10px; color: var(--text-muted);">Pages</div>
+                </div>
+                <div style="background: var(--card); padding: 10px; border-radius: 10px; border: 1px solid var(--border);">
+                  <div style="font-size: 16px; font-weight: 700; color: #c084fc;">${(me.following || []).length}</div>
+                  <div style="font-size: 10px; color: var(--text-muted);">Following</div>
+                </div>
+                <div style="background: var(--card); padding: 10px; border-radius: 10px; border: 1px solid var(--border);">
+                  <div style="font-size: 16px; font-weight: 700; color: var(--cyan);">${this.getFollowerCount(me.username)}</div>
+                  <div style="font-size: 10px; color: var(--text-muted);">Followers</div>
+                </div>
+                <div style="background: var(--card); padding: 10px; border-radius: 10px; border: 1px solid var(--border);">
+                  <div style="font-size: 16px; font-weight: 700; color: #fb7185;">${(me.blocked || []).length}</div>
+                  <div style="font-size: 10px; color: var(--text-muted);">Blocked</div>
+                </div>
+              </div>
+
+              <div>
+                <label class="section-label" style="display:block; margin-bottom: 5px;">Operator Bio (Visible in Directory)</label>
+                <textarea id="profile-bio-input" rows="2" class="textarea" placeholder="Describe your Linux rig, kernel setup, or projects...">${this.escapeHtml(me.bio || '')}</textarea>
+                <div style="display:flex; justify-content: flex-end; margin-top: 6px;">
+                  <button class="btn btn-sm btn-emerald-ghost" onclick="app.updateMyBio()">Save Bio</button>
+                </div>
+              </div>
+
+              <div class="flex gap-2" style="padding-top: 8px; border-top: 1px solid var(--border);">
+                <button class="btn btn-primary" style="flex:1;" onclick="app.exportSelfContainedWiki(); app.closeModal('auth-modal');">⬇ Download Backup (.html)</button>
+                <button class="btn btn-rose-ghost" onclick="app.logout()">Logout</button>
+              </div>
+            </div>
+          `;
+        } else {
+          title.textContent = mode === 'login' ? 'Operator Login' : 'Create Operator Account';
+          body.innerHTML = `
+            <div class="flex gap-2" style="margin-bottom: 14px;">
+              <button class="btn ${mode === 'login' ? 'btn-emerald-ghost' : ''}" style="flex:1;" onclick="app.openAuthModal('login')">Login</button>
+              <button class="btn ${mode === 'register' ? 'btn-emerald-ghost' : ''}" style="flex:1;" onclick="app.openAuthModal('register')">Create Account</button>
+            </div>
+
+            <form onsubmit="app.handleAuth(event, '${mode}')" style="display: flex; flex-direction: column; gap: 12px;">
+              <div>
+                <label class="section-label" style="display:block; margin-bottom: 5px;">Username</label>
+                <input type="text" id="auth-user" class="input" required minlength="2" maxlength="24" placeholder="e.g. levi_arch" />
+              </div>
+              <div>
+                <label class="section-label" style="display:block; margin-bottom: 5px;">Passphrase (PBKDF2-SHA256)</label>
+                <input type="password" id="auth-pass" class="input" required minlength="4" placeholder="••••••••" />
+              </div>
+              ${mode === 'register' ? `
+                <div>
+                  <label class="section-label" style="display:block; margin-bottom: 5px;">Primary Distro / Stack</label>
+                  <select id="auth-role" class="select">
+                    <option value="Arch / Hyprland">Arch / Hyprland</option>
+                    <option value="Debian / debootstrap">Debian / debootstrap</option>
+                    <option value="NixOS / Flakes">NixOS / Flakes</option>
+                    <option value="Bazzite / Fedora Atomic">Bazzite / Fedora Atomic</option>
+                    <option value="Gentoo / Kernel Dev">Gentoo / Kernel Dev</option>
+                  </select>
+                </div>
+                <div>
+                  <label class="section-label" style="display:block; margin-bottom: 5px;">Short Bio</label>
+                  <input type="text" id="auth-bio" class="input" maxlength="140" placeholder="Building local AI agents & multi-boot Linux rigs..." />
+                </div>
+              ` : ''}
+              <button type="submit" class="btn btn-primary" style="padding: 10px;">
+                ${mode === 'login' ? '> Authenticate' : '> Register Operator'}
+              </button>
+            </form>
+          `;
+        }
+        this.openModal('auth-modal');
+      }
+
+      async handleAuth(e, mode) {
+        e.preventDefault();
+        const username = document.getElementById('auth-user').value.trim().toLowerCase().replace(/[^a-z0-9_-]/g, '');
+        const password = document.getElementById('auth-pass').value;
+
+        if (!username || username.length < 2) {
+          this.toast('Use at least 2 letters/numbers for username.', 'error');
+          return;
+        }
+
+        if (mode === 'register') {
+          if (this.state.users[username]) {
+            this.toast(`@${username} is already taken.`, 'error');
+            return;
+          }
+          const salt = this.generateSaltHex(16);
+          const passwordHash = await this.hashPasswordPBKDF2(password, salt);
+          const role = document.getElementById('auth-role')?.value || 'Arch / Hyprland';
+          const bio = document.getElementById('auth-bio')?.value.trim() || '';
+
+          const newUser = {
+            username,
+            passwordHash,
+            salt,
+            role,
+            bio,
+            createdAt: new Date().toISOString().split('T')[0],
+            following: ['archon_root'],
+            blocked: [],
+            bookmarks: [],
+            notes: {}
+          };
+
+          this.state.users[username] = newUser;
+          this.state.currentUser = username;
+          await this.saveState();
+          await this.pushUserToCloud(newUser);
+          this.closeModal('auth-modal');
+          this.renderAll();
+          this.toast(`Registered @${username} with PBKDF2-SHA256!`, 'success');
+        } else {
+          const existing = this.state.users[username];
+          if (!existing || existing.passwordHash === 'seeded_system_account') {
+            this.toast('Account not found or is a read-only seed account.', 'error');
+            return;
+          }
+          const checkHash = await this.hashPasswordPBKDF2(password, existing.salt);
+          if (checkHash !== existing.passwordHash) {
+            this.toast('Invalid passphrase.', 'error');
+            return;
+          }
+          this.state.currentUser = username;
+          await this.saveState();
+          this.closeModal('auth-modal');
+          this.renderAll();
+          this.toast(`Logged in as @${username}`, 'success');
+        }
+      }
+
+      async updateMyBio() {
+        const me = this.getCurrentUser();
+        if (!me) return;
+        me.bio = document.getElementById('profile-bio-input')?.value.trim() || '';
+        await this.saveState();
+        await this.pushUserToCloud(me);
+        this.toast('Profile bio updated.', 'success');
+      }
+
+      async logout() {
+        this.state.currentUser = null;
+        if (this.ui.sidebarFilter !== 'all') this.ui.sidebarFilter = 'all';
+        await this.saveState();
+        this.closeModal('auth-modal');
+        this.renderAll();
+        this.toast('Logged out.', 'info');
+      }
+
+      /* =================================================================== */
+      /* LIVE CLOUD SYNC (SUPABASE REST BRIDGE FOR GITHUB PAGES)             */
+      /* =================================================================== */
+
+      openCloudSyncModal() {
+        document.getElementById('sb-url-input').value = this.cloud.url || '';
+        document.getElementById('sb-key-input').value = this.cloud.anonKey || '';
+        this.openModal('cloud-modal');
+      }
+
+      async saveCloudConfig() {
+        const url = document.getElementById('sb-url-input').value.trim().replace(/\/$/, '');
+        const anonKey = document.getElementById('sb-key-input').value.trim();
+        if (!url || !anonKey) {
+          this.toast('Enter both Supabase Project URL and Anon Key.', 'error');
+          return;
+        }
+        this.cloud = { url, anonKey, connected: true };
+        localStorage.setItem(this.CLOUD_KEY, JSON.stringify({ url, anonKey }));
+        this.renderCloudBadge();
+        await this.syncFromCloud(false);
+      }
+
+      disconnectCloud() {
+        this.cloud = { url: '', anonKey: '', connected: false };
+        localStorage.removeItem(this.CLOUD_KEY);
+        this.renderCloudBadge();
+        this.toast('Disconnected cloud sync. Running in local-only mode.', 'info');
+      }
+
+      renderCloudBadge() {
+        const badge = document.getElementById('sync-status-badge');
+        const btnLabel = document.getElementById('cloud-btn-label');
+        if (this.cloud.connected) {
+          badge.textContent = 'LIVE-CLOUD';
+          badge.className = 'badge badge-purple';
+          btnLabel.textContent = '☁ Live';
+        } else {
+          badge.textContent = 'LOCAL-DB';
+          badge.className = 'badge badge-cyan';
+          btnLabel.textContent = '☁ Sync';
+        }
+      }
+
+      async supabaseFetch(path, options = {}) {
+        const res = await fetch(`${this.cloud.url}/rest/v1/${path}`, {
+          ...options,
+          headers: {
+            'apikey': this.cloud.anonKey,
+            'Authorization': `Bearer ${this.cloud.anonKey}`,
+            'Content-Type': 'application/json',
+            'Prefer': 'resolution=merge-duplicates',
+            ...(options.headers || {})
+          }
+        });
+        if (!res.ok) throw new Error(`HTTP ${res.status}`);
+        const text = await res.text();
+        return text ? JSON.parse(text) : null;
+      }
+
+      async syncFromCloud(silent = false) {
+        if (!this.cloud.connected) return;
+        try {
+          const [remoteUsers, remoteArticles] = await Promise.all([
+            this.supabaseFetch('archon_users?select=*'),
+            this.supabaseFetch('archon_articles?select=*')
+          ]);
+
+          if (Array.isArray(remoteUsers)) {
+            remoteUsers.forEach(ru => {
+              this.state.users[ru.username] = {
+                username: ru.username,
+                passwordHash: ru.password_hash,
+                salt: ru.salt,
+                role: ru.role,
+                bio: ru.bio || '',
+                following: ru.following || [],
+                blocked: ru.blocked || [],
+                bookmarks: ru.bookmarks || [],
+                createdAt: ru.created_at || '2026',
+                notes: this.state.users[ru.username]?.notes || {}
+              };
+            });
+          }
+
+          if (Array.isArray(remoteArticles)) {
+            const map = new Map(this.state.articles.map(a => [a.id, a]));
+            remoteArticles.forEach(ra => {
+              map.set(ra.id, {
+                id: ra.id,
+                title: ra.title,
+                category: ra.category,
+                tags: ra.tags || [],
+                author: ra.author,
+                updatedAt: ra.updated_at,
+                content: ra.content
+              });
+            });
+            this.state.articles = Array.from(map.values());
+          }
+
+          await this.saveState();
+          this.renderAll();
+          if (!silent) this.toast('Synced live users & wiki pages from cloud!', 'success');
+        } catch (err) {
+          if (!silent) this.toast('Cloud sync error: check Supabase URL, key, or SQL tables.', 'error');
+        }
+      }
+
+      async pushUserToCloud(userObj) {
+        if (!this.cloud.connected || !userObj || userObj.passwordHash === 'seeded_system_account') return;
+        try {
+          await this.supabaseFetch('archon_users', {
+            method: 'POST',
+            body: JSON.stringify({
+              username: userObj.username,
+              password_hash: userObj.passwordHash,
+              salt: userObj.salt,
+              role: userObj.role,
+              bio: userObj.bio || '',
+              following: userObj.following || [],
+              blocked: userObj.blocked || [],
+              bookmarks: userObj.bookmarks || [],
+              created_at: userObj.createdAt
+            })
+          });
+        } catch (e) {}
+      }
+
+      async pushArticleToCloud(art) {
+        if (!this.cloud.connected || !art) return;
+        try {
+          await this.supabaseFetch('archon_articles', {
+            method: 'POST',
+            body: JSON.stringify({
+              id: art.id,
+              title: art.title,
+              category: art.category,
+              tags: art.tags || [],
+              author: art.author,
+              updated_at: art.updatedAt,
+              content: art.content
+            })
+          });
+        } catch (e) {}
+      }
+
+      copySupabaseSql() {
+        const sql = document.getElementById('supabase-sql-snippet').textContent;
+        this.copyText(sql, 'Supabase SQL schema copied!');
+      }
+
+      /* =================================================================== */
+      /* ARTICLES, BOOKMARKS, NOTES & EXPORT                                 */
+      /* =================================================================== */
+
+      getVisibleArticles() {
+        const me = this.getCurrentUser();
+        const blockedList = me?.blocked || [];
+        const followingList = me?.following || [];
+        const bookmarkList = me?.bookmarks || [];
+        const q = this.ui.searchQuery.toLowerCase();
+
+        return this.state.articles.filter(art => {
+          // Filter out blocked authors
+          if (blockedList.includes(art.author)) return false;
+
+          if (this.ui.selectedCategory !== 'All' && art.category !== this.ui.selectedCategory) return false;
+          if (this.ui.sidebarFilter === 'following' && !followingList.includes(art.author)) return false;
+          if (this.ui.sidebarFilter === 'bookmarks' && !bookmarkList.includes(art.id)) return false;
+
+          if (!q) return true;
+          return (
+            art.title.toLowerCase().includes(q) ||
+            art.author.toLowerCase().includes(q) ||
+            art.category.toLowerCase().includes(q) ||
+            art.content.toLowerCase().includes(q) ||
+            (art.tags || []).some(t => t.toLowerCase().includes(q))
+          );
+        });
+      }
+
+      async toggleBookmark(articleId) {
+        const me = this.getCurrentUser();
+        if (!me) {
+          this.toast('Log in to bookmark wiki entries.', 'info');
+          this.openAuthModal('login');
+          return;
+        }
+        if (!Array.isArray(me.bookmarks)) me.bookmarks = [];
+        const idx = me.bookmarks.indexOf(articleId);
+        if (idx === -1) {
+          me.bookmarks.push(articleId);
+          this.toast('Bookmarked!', 'success');
+        } else {
+          me.bookmarks.splice(idx, 1);
+          this.toast('Removed bookmark.', 'info');
+        }
+        await this.saveState();
+        await this.pushUserToCloud(me);
+        this.renderAll();
+      }
+
+      async savePersonalNote(articleId) {
+        const me = this.getCurrentUser();
+        if (!me) return;
+        if (!me.notes) me.notes = {};
+        me.notes[articleId] = document.getElementById('personal-note-input')?.value || '';
+        await this.saveState();
+        this.toast('Private margin note saved.', 'success');
+      }
+
+      openEditor(articleId = null) {
+        this.ui.mode = articleId ? 'edit' : 'create';
+        this.ui.editingArticleId = articleId;
+        this.renderMainContent();
+      }
+
+      cancelEditor() {
+        this.ui.mode = 'view';
+        this.ui.editingArticleId = null;
+        this.renderMainContent();
+      }
+
+      async saveArticle(e) {
+        e.preventDefault();
+        const title = document.getElementById('ed-title').value.trim();
+        const category = document.getElementById('ed-category').value;
+        const tags = document.getElementById('ed-tags').value.split(',').map(t => t.trim().toLowerCase()).filter(Boolean);
+        const content = document.getElementById('ed-content').value;
+        const today = new Date().toISOString().split('T')[0];
+
+        if (this.ui.mode === 'edit' && this.ui.editingArticleId) {
+          const idx = this.state.articles.findIndex(a => a.id === this.ui.editingArticleId);
+          if (idx !== -1) {
+            this.state.articles[idx] = { ...this.state.articles[idx], title, category, tags, content, updatedAt: today };
+            this.ui.selectedArticleId = this.ui.editingArticleId;
+            await this.pushArticleToCloud(this.state.articles[idx]);
+            this.toast('Wiki page updated.', 'success');
+          }
+        } else {
+          const newArt = {
+            id: 'post-' + Date.now().toString(36),
+            title,
+            category,
+            tags,
+            author: this.state.currentUser || 'archon_root',
+            updatedAt: today,
+            content
+          };
+          this.state.articles.unshift(newArt);
+          this.ui.selectedArticleId = newArt.id;
+          await this.pushArticleToCloud(newArt);
+          this.toast('Published new wiki entry!', 'success');
+        }
+
+        this.ui.mode = 'view';
+        this.ui.editingArticleId = null;
+        await this.saveState();
+        this.renderAll();
+      }
+
+      updateEditorPreview() {
+        const raw = document.getElementById('ed-content')?.value || '';
+        const box = document.getElementById('ed-preview');
+        if (box) box.innerHTML = this.renderMarkdown(raw);
+      }
+
+      exportSelfContainedWiki() {
+        const clone = document.documentElement.cloneNode(true);
+        const safeJson = JSON.stringify(this.state).replace(/<\/script>/gi, '<\/script>');
+        const seed = clone.querySelector('#ARCHON_EMBEDDED_STATE');
+        if (seed) seed.textContent = safeJson;
+
+        clone.querySelector('#toast-container').innerHTML = '';
+        ['auth-modal', 'operators-modal', 'profile-inspector-modal', 'cloud-modal', 'cheatsheet-modal'].forEach(id => {
+          const m = clone.querySelector('#' + id);
+          if (m) m.classList.add('hidden');
+        });
+
+        const blob = new Blob(['<!DOCTYPE html>
+' + clone.outerHTML], { type: 'text/html;charset=utf-8' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `archon-wiki-v4-${new Date().toISOString().slice(0, 10)}.html`;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        URL.revokeObjectURL(url);
+        this.toast('Downloaded standalone HTML snapshot!', 'success');
+      }
+
+      exportJsonBackup() {
+        const blob = new Blob([JSON.stringify(this.state, null, 2)], { type: 'application/json' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `archon-wiki-backup-${new Date().toISOString().slice(0, 10)}.json`;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        URL.revokeObjectURL(url);
+        this.toast('Exported JSON database backup.', 'success');
+      }
+
+      async importJsonMerge(event) {
+        const file = event.target.files?.[0];
+        if (!file) return;
+        try {
+          const data = JSON.parse(await file.text());
+          if (data.users) Object.assign(this.state.users, data.users);
+          if (Array.isArray(data.articles)) {
+            const map = new Map(this.state.articles.map(a => [a.id, a]));
+            data.articles.forEach(a => map.set(a.id, a));
+            this.state.articles = Array.from(map.values());
+          }
+          await this.saveState();
+          this.renderAll();
+          this.toast('Merged JSON snapshot successfully!', 'success');
+        } catch (e) {
+          this.toast('Invalid JSON snapshot file.', 'error');
+        }
+      }
+
+      /* =================================================================== */
+      /* RENDERING PIPELINE                                                  */
+      /* =================================================================== */
+
+      renderAll() {
+        this.renderCloudBadge();
+        this.renderUserNav();
+        this.renderSidebar();
+        this.renderMainContent();
+        document.getElementById('operator-count-pill').textContent = Object.keys(this.state.users).length;
+      }
+
+      renderUserNav() {
+        const area = document.getElementById('user-nav-area');
+        const me = this.getCurrentUser();
+        if (me) {
+          area.innerHTML = `
+            <button class="btn btn-emerald-ghost" onclick="app.openAuthModal()">
+              <span class="pulse-dot"></span>
+              <span>@${this.escapeHtml(me.username)}</span>
+            </button>
+          `;
+        } else {
+          area.innerHTML = `
+            <button class="btn" onclick="app.openAuthModal('login')">
+              <span>👤 Login / Join</span>
+            </button>
+          `;
+        }
+      }
+
+      renderSidebar() {
+        const catBox = document.getElementById('category-filters');
+        catBox.innerHTML = this.CATEGORIES.map(c => `
+          <button class="cat-pill ${this.ui.selectedCategory === c ? 'active' : ''}" onclick="app.setCategory('${c}')">${c}</button>
+        `).join('');
+
+        const me = this.getCurrentUser();
+        document.getElementById('following-count').textContent = (me?.following || []).length;
+        document.getElementById('bookmark-count').textContent = (me?.bookmarks || []).length;
+
+        const visible = this.getVisibleArticles();
+        document.getElementById('article-count-badge').textContent = visible.length;
+
+        const list = document.getElementById('article-list');
+        if (visible.length === 0) {
+          list.innerHTML = `<div class="mono" style="padding: 20px; text-align:center; font-size: 11px; color: var(--text-dim); border: 1px dashed var(--border); border-radius: 10px;">No entries match current filter.</div>`;
+          return;
+        }
+
+        list.innerHTML = visible.map(art => {
+          const active = art.id === this.ui.selectedArticleId && this.ui.mode === 'view';
+          const followedAuthor = this.isFollowing(art.author);
+          const bookmarked = (me?.bookmarks || []).includes(art.id);
+          return `
+            <div class="article-card ${active ? 'active' : ''}" onclick="app.selectArticle('${art.id}')">
+              <div class="flex items-center justify-between gap-1">
+                <span class="badge badge-cyan">${this.escapeHtml(art.category)}</span>
+                <div class="flex items-center gap-1">
+                  ${followedAuthor ? '<span class="badge badge-purple">FOLLOWING</span>' : ''}
+                  ${bookmarked ? '<span style="color: var(--amber); font-size: 12px;">★</span>' : ''}
+                </div>
+              </div>
+              <div class="article-card-title">${this.escapeHtml(art.title)}</div>
+              <div class="article-card-meta">
+                <span>@${this.escapeHtml(art.author)}</span>
+                <span>•</span>
+                <span>${this.escapeHtml(art.updatedAt)}</span>
+              </div>
+            </div>
+          `;
+        }).join('');
+      }
+
+      renderMainContent() {
+        const main = document.getElementById('main-content-area');
+
+        if (this.ui.mode === 'create' || this.ui.mode === 'edit') {
+          const art = this.ui.mode === 'edit' ? this.state.articles.find(a => a.id === this.ui.editingArticleId) : null;
+          const title = art ? art.title : '';
+          const cat = art ? art.category : 'Distros';
+          const tags = art ? (art.tags || []).join(', ') : 'linux, bash, guide';
+          const content = art ? art.content : `# New Linux Guide
+
+Write Markdown documentation here.
+
+\`\`\`bash
+uname -a
+\`\`\``;
+
+          main.innerHTML = `
+            <div class="reader-card">
+              <div class="reader-header flex items-center justify-between">
+                <span class="mono" style="font-weight: 700; color: #fff;">${this.ui.mode === 'edit' ? 'Edit Wiki Page' : 'Publish New Wiki Page'}</span>
+                <button class="btn btn-sm" onclick="app.cancelEditor()">Cancel</button>
+              </div>
+              <form onsubmit="app.saveArticle(event)" class="reader-body" style="display:flex; flex-direction:column; gap: 14px;">
+                <div style="display:grid; grid-template-columns: 2fr 1fr; gap: 10px;">
+                  <div>
+                    <label class="section-label" style="display:block; margin-bottom:5px;">Title</label>
+                    <input type="text" id="ed-title" class="input" required value="${this.escapeHtml(title)}" placeholder="e.g. Custom Arch + Hyprland Keybinds" />
+                  </div>
+                  <div>
+                    <label class="section-label" style="display:block; margin-bottom:5px;">Namespace</label>
+                    <select id="ed-category" class="select">
+                      ${this.CATEGORIES.filter(c => c !== 'All').map(c => `<option value="${c}" ${c === cat ? 'selected' : ''}>${c}</option>`).join('')}
+                    </select>
+                  </div>
+                </div>
+                <div>
+                  <label class="section-label" style="display:block; margin-bottom:5px;">Tags (comma-separated)</label>
+                  <input type="text" id="ed-tags" class="input" value="${this.escapeHtml(tags)}" />
+                </div>
+                <div class="editor-grid">
+                  <div>
+                    <label class="section-label" style="display:block; margin-bottom:5px;">Markdown Source</label>
+                    <textarea id="ed-content" rows="16" class="textarea" required oninput="app.updateEditorPreview()">${this.escapeHtml(content)}</textarea>
+                  </div>
+                  <div>
+                    <label class="section-label" style="display:block; margin-bottom:5px; color: var(--emerald);">Live Preview</label>
+                    <div id="ed-preview" class="preview-box wiki-prose">${this.renderMarkdown(content)}</div>
+                  </div>
+                </div>
+                <div class="flex gap-2" style="justify-content: flex-end;">
+                  <button type="button" class="btn" onclick="app.cancelEditor()">Discard</button>
+                  <button type="submit" class="btn btn-primary">Save & Publish</button>
+                </div>
+              </form>
+            </div>
+          `;
+          return;
+        }
+
+        const visible = this.getVisibleArticles();
+        const art = visible.find(a => a.id === this.ui.selectedArticleId) || visible[0];
+        if (!art) {
+          main.innerHTML = `<div class="reader-card" style="padding: 48px; text-align:center;"><p class="mono" style="color: var(--text-muted); margin-bottom: 14px;">No visible articles in this filter.</p><button class="btn btn-primary" onclick="app.openEditor()">+ Write Wiki Page</button></div>`;
+          return;
+        }
+
+        const me = this.getCurrentUser();
+        const isMyPost = me && me.username === art.author;
+        const followingAuthor = this.isFollowing(art.author);
+        const bookmarked = (me?.bookmarks || []).includes(art.id);
+        const note = me?.notes?.[art.id] || '';
+
+        main.innerHTML = `
+          <article class="reader-card">
+            <div class="reader-header">
+              <div class="flex items-center justify-between gap-2" style="flex-wrap: wrap; margin-bottom: 10px;">
+                <div class="flex items-center gap-2" style="flex-wrap: wrap;">
+                  <span class="badge badge-cyan">${this.escapeHtml(art.category)}</span>
+                  <button class="btn btn-sm" onclick="app.inspectOperatorProfile('${this.escapeHtml(art.author)}')">
+                    <span>@${this.escapeHtml(art.author)}</span>
+                  </button>
+                  ${!isMyPost ? `
+                    <button class="btn btn-sm ${followingAuthor ? 'btn-emerald-ghost' : ''}" onclick="app.toggleFollowUser('${this.escapeHtml(art.author)}')">
+                      ${followingAuthor ? '✓ Following' : '+ Follow'}
+                    </button>
+                    <button class="btn btn-sm btn-rose-ghost" onclick="app.toggleBlockUser('${this.escapeHtml(art.author)}')" title="Block user & hide their posts">
+                      Block
+                    </button>
+                  ` : ''}
+                  <span class="mono" style="font-size: 11px; color: var(--text-dim);">Updated ${this.escapeHtml(art.updatedAt)}</span>
+                </div>
+
+                <div class="flex items-center gap-2">
+                  <button class="btn btn-sm ${bookmarked ? 'btn-amber-ghost' : ''}" onclick="app.toggleBookmark('${art.id}')">
+                    ${bookmarked ? '★ Saved' : '☆ Save'}
+                  </button>
+                  <button class="btn btn-sm btn-emerald-ghost" onclick="app.openEditor('${art.id}')">Edit</button>
+                </div>
+              </div>
+
+              <div class="flex gap-1" style="flex-wrap: wrap;">
+                ${(art.tags || []).map(t => `<span class="badge" style="background: var(--bg); border: 1px solid var(--border); color: var(--text-muted);">#${this.escapeHtml(t)}</span>`).join('')}
+              </div>
+            </div>
+
+            <div class="reader-body wiki-prose">
+              ${this.renderMarkdown(art.content)}
+            </div>
+
+            <div class="reader-notes">
+              <div class="flex items-center justify-between" style="margin-bottom: 8px;">
+                <span class="section-label" style="color: var(--emerald);">// Private Operator Margin Notes</span>
+                <span class="mono" style="font-size: 11px; color: var(--text-dim);">${me ? 'Saved locally to @' + this.escapeHtml(me.username) : 'Login required'}</span>
+              </div>
+              ${me ? `
+                <textarea id="personal-note-input" rows="2" class="textarea" placeholder="Add personal UUIDs, kernel flags, or device notes...">${this.escapeHtml(note)}</textarea>
+                <div style="display:flex; justify-content: flex-end; margin-top: 8px;">
+                  <button class="btn btn-sm btn-emerald-ghost" onclick="app.savePersonalNote('${art.id}')">Save Note</button>
+                </div>
+              ` : `
+                <button class="btn btn-sm btn-primary" onclick="app.openAuthModal('register')">Create Account to Add Private Notes</button>
+              `}
+            </div>
+          </article>
+        `;
+      }
+
+      /* =================================================================== */
+      /* MARKDOWN PARSER & HELPERS                                           */
+      /* =================================================================== */
+
+      renderMarkdown(md) {
+        if (!md) return '';
+        let html = this.escapeHtml(md);
+        const blocks = [];
+        html = html.replace(/```([a-zA-Z0-9_-]*)
+([\s\S]*?)```/g, (_, lang, code) => {
+          const i = blocks.length;
+          blocks.push(`
+            <div class="code-wrap">
+              <div class="code-header">
+                <span>${lang || 'sh'}</span>
+                <button type="button" class="btn btn-sm btn-emerald-ghost" onclick="app.copyBlock(this)">Copy</button>
+              </div>
+              <pre><code>${code.replace(/
+$/, '')}</code></pre>
+            </div>
+          `);
+          return `@@BLK_${i}@@`;
+        });
+        html = html.replace(/`([^`
+]+)`/g, '<code>$1</code>');
+        html = html.replace(/^### (.*$)/gm, '<h3>$1</h3>');
+        html = html.replace(/^## (.*$)/gm, '<h2>$1</h2>');
+        html = html.replace(/^# (.*$)/gm, '<h1>$1</h1>');
+        html = html.replace(/^&gt; (.*$)/gm, '<blockquote>$1</blockquote>');
+        html = html.replace(/\*\*([^*]+)\*\*/g, '<strong style="color:#fff;">$1</strong>');
+        html = html.replace(/^(?:- |\* )(.*)$/gm, '<li>$1</li>');
+        html = html.replace(/(<li>.*<\/li>
+?)+/g, m => `<ul>${m}</ul>`);
+        html = html.split(/
+{2,}/).map(p => {
+          const t = p.trim();
+          if (!t) return '';
+          if (t.startsWith('<h') || t.startsWith('<ul>') || t.startsWith('<blockquote>') || t.startsWith('@@BLK_')) return t;
+          return `<p>${t.replace(/
+/g, '<br/>')}</p>`;
+        }).join('
+');
+        blocks.forEach((b, i) => { html = html.replace(`@@BLK_${i}@@`, b); });
+        return html;
+      }
+
+      copyBlock(btn) {
+        const code = btn.closest('.code-wrap')?.querySelector('code')?.textContent || '';
+        this.copyText(code, 'Command copied!');
+      }
+
+      copyText(text, msg = 'Copied!') {
+        const ta = document.createElement('textarea');
+        ta.value = text;
+        ta.style.position = 'fixed';
+        ta.style.opacity = '0';
+        document.body.appendChild(ta);
+        ta.select();
+        document.execCommand('copy');
+        document.body.removeChild(ta);
+        this.toast(msg, 'success');
+      }
+
+      openCheatsheet() {
+        document.getElementById('cheatsheet-filter').value = '';
+        this.renderCheatsheet('');
+        this.openModal('cheatsheet-modal');
+      }
+
+      renderCheatsheet(q) {
+        const term = q.toLowerCase();
+        const items = CHEATSHEET_COMMANDS.filter(c => c.cmd.toLowerCase().includes(term) || c.desc.toLowerCase().includes(term) || c.cat.toLowerCase().includes(term));
+        document.getElementById('cheatsheet-list').innerHTML = items.map(c => `
+          <div style="background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 12px; display:flex; flex-direction:column; gap: 6px;">
+            <div class="flex items-center justify-between">
+              <span class="badge badge-cyan">${this.escapeHtml(c.cat)}</span>
+              <button class="btn btn-sm btn-emerald-ghost" onclick="app.copyText('${this.escapeHtml(c.cmd).replace(/'/g, "\'")}')">Copy</button>
+            </div>
+            <code class="mono" style="font-size: 12px; color: #fff; background: var(--bg); padding: 6px 8px; border-radius: 6px;">${this.escapeHtml(c.cmd)}</code>
+            <span style="font-size: 12px; color: var(--text-muted);">${this.escapeHtml(c.desc)}</span>
+          </div>
+        `).join('');
+      }
+
+      selectArticle(id) {
+        this.ui.selectedArticleId = id;
+        this.ui.mode = 'view';
+        document.getElementById('sidebar').classList.remove('open');
+        this.renderSidebar();
+        this.renderMainContent();
+      }
+
+      selectDefaultArticle() {
+        this.ui.selectedCategory = 'All';
+        this.ui.sidebarFilter = 'all';
+        this.ui.mode = 'view';
+        this.ui.selectedArticleId = this.getVisibleArticles()[0]?.id || null;
+        this.renderSidebar();
+        this.renderMainContent();
+      }
+
+      setCategory(c) {
+        this.ui.selectedCategory = c;
+        this.renderSidebar();
+      }
+
+      setSidebarFilter(f) {
+        this.ui.sidebarFilter = f;
+        ['all', 'following', 'bookmarks'].forEach(tab => {
+          document.getElementById('tab-' + tab).className = 'sidebar-tab' + (tab === f ? ' active' : '');
+        });
+        this.renderSidebar();
+      }
+
+      toggleSidebar() {
+        document.getElementById('sidebar').classList.toggle('open');
+      }
+
+      openModal(id) {
+        document.getElementById(id)?.classList.remove('hidden');
+      }
+
+      closeModal(id) {
+        document.getElementById(id)?.classList.add('hidden');
+      }
+
+      bindEvents() {
+        const search = document.getElementById('search-input');
+        const clear = document.getElementById('clear-search-btn');
+        search.addEventListener('input', e => {
+          this.ui.searchQuery = e.target.value;
+          clear.classList.toggle('hidden', !e.target.value);
+          this.renderSidebar();
+        });
+        clear.addEventListener('click', () => {
+          search.value = '';
+          this.ui.searchQuery = '';
+          clear.classList.add('hidden');
+          this.renderSidebar();
+        });
+        document.addEventListener('keydown', e => {
+          if (e.key === '/' && !['INPUT', 'TEXTAREA'].includes(document.activeElement.tagName)) {
+            e.preventDefault();
+            search.focus();
+          } else if (e.key === 'Escape') {
+            ['auth-modal', 'operators-modal', 'profile-inspector-modal', 'cloud-modal', 'cheatsheet-modal'].forEach(id => this.closeModal(id));
+          }
+        });
+      }
+
+      toast(msg, type = 'success') {
+        const wrap = document.getElementById('toast-container');
+        const el = document.createElement('div');
+        el.className = `toast ${type}`;
+        el.textContent = msg;
+        wrap.appendChild(el);
+        setTimeout(() => { el.style.opacity = '0'; setTimeout(() => el.remove(), 250); }, 3000);
+      }
+
+      escapeHtml(s) {
+        if (s === null || s === undefined) return '';
+        return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&#039;');
+      }
+    }
+
+    let app;
+    window.addEventListener('DOMContentLoaded', () => { app = new ArchonSocialWikiApp(); });
+  </script>
+</body>
+</html>
